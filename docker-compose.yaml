@@ -1,0 +1,21 @@
+version: '3.9'
+
+services:
+  django-server:
+    container_name: django-server
+    build: app/
+    restart: always
+    environment:
+      - DEBUG=1
+      - db_engine=django.db.backends.postgresql_psycopg2
+      - db_name=dnpd1b4iumfsq
+      - db_user=jskxlnsnraqerv
+      - db_password=4fff0f47f4cd46f5315eb5bd2a093c6deba1a985b1cfaacb2bb9fdece7dc5abd
+      - db_host=ec2-34-253-116-145.eu-west-1.compute.amazonaws.com
+      - db_port=5432
+    ports:
+      - "8000:8000"
+      - "5432:5432"
+    volumes:
+      - ./app/:/app
+    command: sh -c "python manage.py 0.0.0.0:8000"

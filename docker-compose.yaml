@@ -13,6 +13,7 @@ services:
       - db_password=4fff0f47f4cd46f5315eb5bd2a093c6deba1a985b1cfaacb2bb9fdece7dc5abd
       - db_host=ec2-34-253-116-145.eu-west-1.compute.amazonaws.com
       - db_port=5432
+      - host_name=kht-test-apptrix.herokuapp.com
     ports:
       - "8000:8000"
       - "5432:5432"

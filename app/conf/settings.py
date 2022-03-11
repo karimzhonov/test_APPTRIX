@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-hraxl2qy46+p!9!__qvlr#mo=51fc^roz72p5iioo=sl*sa)w-
 # DEBUG = bool(int(os.environ.get('DEBUG')))
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['kht-test-apptrix.herokuapp.com', 'localhost', '127.0.0.1']
 
 # Application definition
 

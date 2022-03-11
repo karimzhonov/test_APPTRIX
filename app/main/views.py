@@ -1,13 +1,12 @@
-import os
-import io
 import cv2
-from PIL import Image
 import numpy as np
-from django.core.files.base import File
-from django.conf import settings
 from django.http import HttpResponse
-from rest_framework import viewsets, generics
+
+from rest_framework import viewsets, generics, status
+from rest_framework.response import Response
+
 from .serializer import *
+from .image_refactor import impose_ico_to_image
 
 
 class CreateClientView(generics.CreateAPIView):
@@ -15,40 +14,35 @@ class CreateClientView(generics.CreateAPIView):
     queryset = Client.objects.all()
 
     def create(self, request, *args, **kwargs):
-        # csrfmiddlewaretoken
-        csrfmiddlewaretoken = request.data['csrfmiddlewaretoken'][0]
-        request.data.pop('csrfmiddlewaretoken')
-        # avatar
+        # Refactor avatar
         avatar = request.data['avatar']
-        request.data.pop('avatar')
-        # refactor gender field
-        request.data['gender_id'] = request.data['gender']
-        request.data.pop('gender')
-        # refactor data dict farmat: data[key] = [value]
-        data = dict(request.data)
-        for key, value in data.items():
-            data[key] = value[0]
-        client = Client(**data)
-        # Resactor avatar
-        # image = cv2.imdecode(np.frombuffer(avatar.read(), np.uint8), -1)
-        # image_height, image_wight, _ = image.shape
-        # path_to_ico = os.path.join(settings.STATIC_ROOT, 'favicon.jpeg')
-        # ico = cv2.imread(path_to_ico)
-        # ico_height, ico_width, _ = ico.shape
-        # # refactoring ico
-        # new_ico_width = image_wight // 10
-        # new_ico_height = int(ico_height * (ico_width / new_ico_width))
-        # new_ico = cv2.resize(ico, (new_ico_width, new_ico_height))
-        # #
+        image = cv2.imdecode(np.frombuffer(avatar.read(), np.uint8), -1)
+        image = impose_ico_to_image(image)
+        # Serialzing data
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = dict(serializer.data)
+        data['avatar'] = request.data['avatar'].name.__str__()
+        # create Client
+        client = Client.create(**data)
+        client.save_avatar(image)
+        # Response
+        headers = self.get_success_headers(serializer.data)
+        return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-        client.avatar.save(
-            avatar.name,
-            File(avatar)
-        )
-        #
-        # print(client.avatar)
+class AuthClientView(viewsets.ModelViewSet):
+    serializer_class = AuthClientSerializers
+    queryset = Client.objects.all()
 
+    def post(self, request, *args, **kwargs):
+        username = request.data['username']
+        password = request.data['password']
+
+        ret, client = Client.auth(username, password)
+        return Response({
+            "auth": ret,
+        })
 
 
 def test(request):

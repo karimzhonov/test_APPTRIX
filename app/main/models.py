@@ -1,10 +1,17 @@
+import os
+import cv2
+import numpy as np
 from django.db import models
+from django.conf import settings
+from datetime import datetime
 import hashlib
 
 
-# Create your models here.
 class Gender(models.Model):
     name = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Client(models.Model):
@@ -24,8 +31,8 @@ class Client(models.Model):
         verbose_name_plural = 'Участники'
 
     @staticmethod
-    def _hashing_sha256(text: str):
-        return hashlib.sha256(text).hexdigest()
+    def hashing_sha256(text):
+        return hashlib.sha256(text.encode()).hexdigest()
 
     @classmethod
     def auth(cls, username, password):
@@ -34,13 +41,30 @@ class Client(models.Model):
         except cls.objects.model.DoesNotExist:
             return False, None
         else:
-            if client.password == cls._hashing_sha256(password):
+            if client.password == cls.hashing_sha256(password):
                 return True, client
             else:
                 return False, None
 
     @classmethod
     def create(cls, **kwargs):
-        kwargs['password'] = cls._hashing_sha256(kwargs['password'])
+        # Refactor fields
+        kwargs['password'] = cls.hashing_sha256(kwargs['password'])
+        kwargs['gender_id'] = kwargs['gender']
+        kwargs.pop('gender')
+        # Create Client
+        client = cls(**kwargs)
+        client.avatar = cls.avatar.field.generate_filename(client.avatar.instance, kwargs['avatar'])
+        client.save()
+        return client
 
-        return cls.objects.create(**kwargs)
+    def save_avatar(self, image: np.array):
+        image_name = self.avatar.name
+        if os.path.exists(image_name):
+            dtime = datetime.now()
+            new_name_list = image_name.split('.')
+            new_name_list[-2] += f'{dtime}'
+            self.avatar = '.'.join(new_name_list)
+            return self.save_avatar(image)
+        cv2.imwrite(os.path.join(settings.MEDIA_ROOT, image_name), image)
+        return image_name

@@ -18,4 +18,4 @@ services:
       - "5432:5432"
     volumes:
       - ./app/:/app
-    command: sh -c "python manage.py 0.0.0.0:8000"
+    command: sh -c "gunicorn conf.wsgi"

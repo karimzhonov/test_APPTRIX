@@ -15,6 +15,10 @@ class Gender(models.Model):
     def __str__(self) -> str:
         return f'{self.name}'
 
+    class Meta:
+        verbose_name = 'Пол'
+        verbose_name_plural = 'Пол'
+
 
 class Client(AbstractUser):
     """Участник"""
@@ -76,3 +80,11 @@ class Match(models.Model):
     from_client = models.ForeignKey(Client, models.CASCADE, related_name='match_from_client')
     to_client = models.ForeignKey(Client, models.CASCADE, related_name='match_to_client')
     date_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'From: {self.from_client} To: {self.to_client}'
+
+    class Meta:
+        verbose_name = 'Симпатия'
+        verbose_name_plural = 'Симпатий'
+        ordering = ['-date_time']

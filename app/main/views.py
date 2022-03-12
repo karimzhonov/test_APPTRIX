@@ -62,10 +62,10 @@ class ShowClientView(generics.RetrieveAPIView):
 
 class MatchClientView(viewsets.ViewSet):
     """Подходящие клиенты, если они оба совпадают, отправляется электронное письмо"""
-    def match(self, request, client_id):
+    def match(self, request, pk):
         # Getting Data
         from_client_id = self.request.user.pk
-        to_client_id = client_id
+        to_client_id = pk
         # Create Match
         data = {
             'match_created_status': False,

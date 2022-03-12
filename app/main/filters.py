@@ -18,6 +18,3 @@ class ClientFilter(filters.FilterSet):
         queryset = queryset.extra(where=[
             f"{D} < {value}"])
         return queryset
-        # pifagure = SQRT(({user_latitude} - latitude)*({user_latitude} - latitude) + ({user_longitude} - longitude)*({user_longitude} - longitude))
-        # value < self.request.user.get_distance((F('longitude'), F('latitude')))
-        # return queryset.filter(flag)

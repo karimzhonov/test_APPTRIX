@@ -17,3 +17,4 @@ class ShowClientSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ['avatar', 'username', 'first_name', 'last_name', 'email', 'gender']
         model = Client
+

@@ -9,3 +9,8 @@ admin.site.register(Client, UserAdmin)
 class GenderAdmin(admin.ModelAdmin):
     class Meta:
         fields = "__all__"
+
+@admin.register(Match)
+class MatchAdmin(admin.ModelAdmin):
+    class Meta:
+        fields = "__all__"

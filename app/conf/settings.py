@@ -144,3 +144,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #         'rest_framework.authentication.TokenAuthentication',
 #     ]
 # }
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER = os.environ.get('email_name')
+# EMAIL_HOST_PASSWORD = os.environ.get('email_password')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER = 'testapptrix4944@gmail.com'
+EMAIL_HOST_PASSWORD = 'karimjonov4944'

@@ -1,8 +1,10 @@
 import os
 import cv2
 import numpy as np
+from django.core.mail import send_mail
 from django.db import models
 from django.conf import settings
+
 from django.contrib.auth.models import AbstractUser
 from django.core.files.base import ContentFile
 
@@ -38,3 +40,13 @@ class Client(AbstractUser):
         _, image_bytes = cv2.imencode(f'.{_format}', image)
         self.avatar.save(image_name, ContentFile(image_bytes))
         return image_name
+
+    def send_email_about_matching(self, matched_client):
+        subject = f'Test Apptrix'
+        text = f'Вы понравились {matched_client}! Почта участника: {matched_client.email}'
+        return send_mail(subject, text, settings.DEFAULT_FROM_EMAIL, [f'{self.email}'],)
+
+class Match(models.Model):
+    from_client = models.ForeignKey(Client, models.CASCADE, related_name='match_from_client')
+    to_client = models.ForeignKey(Client, models.CASCADE, related_name='match_to_client')
+    date_time = models.DateTimeField(auto_now_add=True)

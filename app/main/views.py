@@ -12,7 +12,7 @@ from .filters import ClientFilter
 
 
 class CreateClientView(generics.CreateAPIView):
-    """Create Client, refactor image and save image"""
+    """Создайте клиента, рефакторинг изображения и сохраните изображение"""
     serializer_class = CreateClientSerializer
     queryset = Client.objects.all()
 
@@ -38,7 +38,7 @@ class CreateClientView(generics.CreateAPIView):
 
 
 class AuthClientView(viewsets.ModelViewSet):
-    """Authenticating Client"""
+    """Аутентификация клиента"""
     serializer_class = AuthClientSerializer
     queryset = Client.objects.all()
 
@@ -55,7 +55,7 @@ class AuthClientView(viewsets.ModelViewSet):
 
 
 class ShowClientView(generics.RetrieveAPIView):
-    """Show one of the clients"""
+    """Покажите одного из клиентов"""
     serializer_class = ShowClientSerializer
     queryset = Client.objects.all()
 
@@ -89,6 +89,8 @@ class MatchClientView(viewsets.ViewSet):
             return Response(data, status=status.HTTP_200_OK)
         except IntegrityError:
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        except AttributeError:
+            return redirect('auth_client')
 
 
 class ListClientsView(generics.ListAPIView):
@@ -101,47 +103,56 @@ class ListClientsView(generics.ListAPIView):
 
 class CoordinateClientView(viewsets.ViewSet):
     """
-    View для координат
+    Координат Клиента
     get запрос для получение
     post запрос для корректировки
     """
     serializer_class = CoordinateClientSerializer
 
     def get(self, request):
-        user = self.request.user
-        data = {
-            'longitude': user.longitude,
-            'latitude': user.latitude,
-        }
-        return Response(data, status=status.HTTP_200_OK)
+        try:
+            user = self.request.user
+            data = {
+                'longitude': user.longitude,
+                'latitude': user.latitude,
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        except AttributeError:
+            return redirect('auth_client')
 
     def post(self, request):
         # Getting Data
-        user = self.request.user
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid()
-        data = serializer.data
-        # Update Model
-        user.longitude = data['longitude']
-        user.latitude = data['latitude']
-        user.save()
-        return self.get(request)
+        try:
+            user = self.request.user
+            serializer = self.serializer_class(data=request.data)
+            serializer.is_valid()
+            data = serializer.data
+            # Update Model
+            user.longitude = data['longitude']
+            user.latitude = data['latitude']
+            user.save()
+            return self.get(request)
+        except AttributeError:
+            return redirect('auth_client')
 
 
 class DistanceClientView(viewsets.ViewSet):
     """View для получение расстояние"""
     def get(self, request, pk):
-        user = self.request.user
-        client = get_object_or_404(Client, pk=pk)
-        data = {
-            'user_id': user.id,
-            'client_id': client.id,
-            'user_longitude': user.longitude,
-            'user_latitude': user.latitude,
-            'client_longitude': client.longitude,
-            'client_latitude': client.latitude,
-            'distance': user.get_distance(
-                (client.latitude, client.longitude)
-            ),
-        }
-        return Response(data, status=status.HTTP_200_OK)
+        try:
+            user = self.request.user
+            client = get_object_or_404(Client, pk=pk)
+            data = {
+                'user_id': user.id,
+                'client_id': client.id,
+                'user_longitude': user.longitude,
+                'user_latitude': user.latitude,
+                'client_longitude': client.longitude,
+                'client_latitude': client.latitude,
+                'distance': user.get_distance(
+                    (client.latitude, client.longitude)
+                ),
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        except AttributeError:
+            return redirect('auth_client')

@@ -30,18 +30,15 @@ class Client(AbstractUser):
         verbose_name = 'Участник'
         verbose_name_plural = 'Участники'
 
-    def save_avatar(self, image: np.array) -> str:
+    def save_avatar(self, image) -> str:
         """
         Сохранение изображения
         :param image: np.array
         :return: image_name
         """
-        import cv2.cv2 as cv2
 
         image_name = self.avatar.name
-        _format = image_name.split('.')[-1]
-        _, image_bytes = cv2.imencode(f'.{_format}', image)
-        self.avatar.save(image_name, ContentFile(image_bytes))
+        self.avatar.save(image_name, ContentFile(image))
         return image_name
 
     def send_email_about_matching(self, matched_client) -> int:

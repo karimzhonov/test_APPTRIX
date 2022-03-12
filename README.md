@@ -1,7 +1,7 @@
 # test_APPTRIX
 **Тестовое задание в компание APPTRIX**
 
-######Результат: [kht-test-apptrix.herokuapp.com](https://kht-test-apptrix.herokuapp.com/api/)
+Результат: [kht-test-apptrix.herokuapp.com](https://kht-test-apptrix.herokuapp.com/api/)
 
 *Описание задачи*
 

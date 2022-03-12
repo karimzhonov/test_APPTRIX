@@ -3,13 +3,16 @@ from django.contrib.auth import authenticate, login
 from django.db.utils import IntegrityError
 from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .serializer import *
 from .models import *
 from .image_refactor import impose_ico_to_image
+from .filters import ClientFilter
 
 
 class CreateClientView(generics.CreateAPIView):
+    """Create Client, refactor image and save image"""
     serializer_class = CreateClientSerializer
     queryset = Client.objects.all()
 
@@ -32,6 +35,7 @@ class CreateClientView(generics.CreateAPIView):
 
 
 class AuthClientView(viewsets.ModelViewSet):
+    """Authenticating Client"""
     serializer_class = AuthClientSerializer
     queryset = Client.objects.all()
 
@@ -46,12 +50,15 @@ class AuthClientView(viewsets.ModelViewSet):
         else:
             return Response({})
 
+
 class ShowClientView(generics.RetrieveAPIView):
+    """Show one of the clients"""
     serializer_class = ShowClientSerializer
     queryset = Client.objects.all()
 
 
 class MatchClientView(viewsets.ModelViewSet):
+    """Matching clients, if matching both of them send email"""
     queryset = Client.objects.all()
 
     def get(self, request, client_id):
@@ -82,3 +89,11 @@ class MatchClientView(viewsets.ModelViewSet):
             return Response(data, status=status.HTTP_200_OK)
         except IntegrityError:
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ListClientsView(generics.ListAPIView):
+    """List of Clients with filters"""
+    serializer_class = ShowClientSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = ClientFilter
+    queryset = Client.objects.all()

@@ -25,6 +25,7 @@ SECRET_KEY = 'django-insecure-hraxl2qy46+p!9!__qvlr#mo=51fc^roz72p5iioo=sl*sa)w-
 # DEBUG = bool(int(os.environ.get('DEBUG')))
 DEBUG = True
 
+# ALLOWED_HOSTS = [os.environ.get('host_name'), 'localhost', '127.0.0.1']
 ALLOWED_HOSTS = ['kht-test-apptrix.herokuapp.com', 'localhost', '127.0.0.1']
 
 # Application definition
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'main.apps.MainConfig',
 ]
 
@@ -137,18 +139,23 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# REST_FRAMEWORK = {
-#     # Use Django's standard `django.contrib.auth` permissions,
-#     # or allow read-only access for unauthenticated users.
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.authentication.TokenAuthentication',
-#     ]
-# }
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.authentication.TokenAuthentication',
+    # ]
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+}
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
+# EMAIL_HOST = os.environ.get('email_host')
+# EMAIL_PORT = int(os.environ.get('email_host_port'))
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER = os.environ.get('email_name')
 # EMAIL_HOST_PASSWORD = os.environ.get('email_password')
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER = 'testapptrix4944@gmail.com'
 EMAIL_HOST_PASSWORD = 'karimjonov4944'

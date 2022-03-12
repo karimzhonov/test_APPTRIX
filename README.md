@@ -19,7 +19,7 @@
 > 2. Создается Участник, рефакторинг изображения и сохраните изображение: [api/client/create/](https://kht-test-apptrix.herokuapp.com/api/client/create/)
 > 3. Аутентификация Участника: [api/client/auth/](https://kht-test-apptrix.herokuapp.com/api/client/auth/)
 > 4. Координат Участника (get запрос для получение, post запрос для корректировки): [api/client/coordinates/](https://kht-test-apptrix.herokuapp.com/api/client/coordinates/)
-> 5. Покажите одного из Участников (pk=5 для тестов по этой ссылке): [api/client/<int:pk>/](https://kht-test-apptrix.herokuapp.com/api/client/5/)
-> 6. Подходящие Участники, если они оба совпадают, отправляется электронное письмо (pk=5 для тестов по этой ссылке): [api/client/<int:pk>/match/](https://kht-test-apptrix.herokuapp.com/api/client/5/match/)
-> 7. Получение расстояние Участников (pk=5 для тестов по этой ссылке): [api/client/<int:pk>/distance/](https://kht-test-apptrix.herokuapp.com/api/client/5/distance/)
+> 5. Покажите одного из Участников (pk=5 для тестов по этой ссылке): [api/client/int:pk/](https://kht-test-apptrix.herokuapp.com/api/client/5/)
+> 6. Подходящие Участники, если они оба совпадают, отправляется электронное письмо (pk=5 для тестов по этой ссылке): [api/client/int:pk/match/](https://kht-test-apptrix.herokuapp.com/api/client/5/match/)
+> 7. Получение расстояние Участников (pk=5 для тестов по этой ссылке): [api/client/int:pk/distance/](https://kht-test-apptrix.herokuapp.com/api/client/5/distance/)
 

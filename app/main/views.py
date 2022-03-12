@@ -12,7 +12,7 @@ from .filters import ClientFilter
 
 
 class CreateClientView(generics.CreateAPIView):
-    """Создайте клиента, рефакторинг изображения и сохраните изображение"""
+    """Создается клиент, рефакторинг изображения и сохраните изображение"""
     serializer_class = CreateClientSerializer
     queryset = Client.objects.all()
 
@@ -56,7 +56,7 @@ class AuthClientView(viewsets.ModelViewSet):
 
 
 class ShowClientView(generics.RetrieveAPIView):
-    """Покажите одного из клиентов"""
+    """Покажит одного из клиентов"""
     serializer_class = ShowClientSerializer
     queryset = Client.objects.all()
 

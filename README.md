@@ -2,6 +2,7 @@
 **Тестовое задание в компание APPTRIX**
 
 Результат: [kht-test-apptrix.herokuapp.com](https://kht-test-apptrix.herokuapp.com/api/)
+
 Инструменты для разработки:
 ![Python](https://img.shields.io/badge/-Python-black?style=flat-square&logo=Python)
 ![Postgresql](https://img.shields.io/badge/-Postgresql-%232c3e50?style=flat-square&logo=Postgresql)

@@ -29,11 +29,12 @@ class CreateClientView(generics.CreateAPIView):
         data['gender_id'] = data['gender']
         data.pop('gender')
         # create Client
-        client = Client(**data)
+        client = Client.objects.create_user(**data)
         client.save_avatar(image)
         client.save()
         # Response
         headers = self.get_success_headers(serializer.data)
+        data['id'] = client.pk
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 
 

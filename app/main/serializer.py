@@ -19,7 +19,7 @@ class AuthClientSerializer(serializers.ModelSerializer):
 class ShowClientSerializer(serializers.ModelSerializer):
     """Serializers для показа участника(без пароля)"""
     class Meta:
-        fields = ['avatar', 'username', 'first_name', 'last_name', 'email', 'gender', 'latitude', 'longitude']
+        fields = ['avatar', 'username', 'first_name', 'last_name', 'email', 'gender', 'latitude', 'longitude', 'id']
         model = Client
 
 

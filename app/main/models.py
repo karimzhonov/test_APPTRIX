@@ -22,7 +22,7 @@ class Gender(models.Model):
 class Client(AbstractUser):
     """Участник"""
     avatar = models.ImageField(upload_to='avatars/', blank=True)
-    gender = models.ForeignKey(Gender, models.CASCADE, blank=True)
+    gender = models.ForeignKey(Gender, models.CASCADE, blank=True, default=1)
     longitude = models.FloatField(blank=True, default=0)
     latitude = models.FloatField(blank=True, default=0)
 

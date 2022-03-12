@@ -7,13 +7,19 @@ services:
     restart: always
     environment:
       - DEBUG=1
+      - host_name=kht-test-apptrix.herokuapp.com
+      # Db Config
       - db_engine=django.db.backends.postgresql_psycopg2
       - db_name=dnpd1b4iumfsq
       - db_user=jskxlnsnraqerv
       - db_password=4fff0f47f4cd46f5315eb5bd2a093c6deba1a985b1cfaacb2bb9fdece7dc5abd
       - db_host=ec2-34-253-116-145.eu-west-1.compute.amazonaws.com
       - db_port=5432
-      - host_name=kht-test-apptrix.herokuapp.com
+      # Email Config
+      - email_name=testapptrix4944@gmail.com
+      - email_password=karimjonov4944
+      - email_host=smtp.gmail.com
+      - email_host_port=587
     ports:
       - "8000:8000"
       - "5432:5432"

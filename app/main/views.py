@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.db.utils import IntegrityError
 from rest_framework import viewsets, generics, status
@@ -25,9 +25,12 @@ class CreateClientView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         data = dict(serializer.data)
+        # Refactor fields
         data['avatar'] = request.data['avatar'].name.__str__()
+        data['gender_id'] = data['gender']
+        data.pop('gender')
         # create Client
-        client = Client.create(**data)
+        client = Client.objects.create(**data)
         client.save_avatar(image)
         # Response
         headers = self.get_success_headers(serializer.data)
@@ -39,7 +42,7 @@ class AuthClientView(viewsets.ModelViewSet):
     serializer_class = AuthClientSerializer
     queryset = Client.objects.all()
 
-    def post(self, request, *args, **kwargs):
+    def login(self, request, *args, **kwargs):
         username = request.data['username']
         password = request.data['password']
 
@@ -57,11 +60,9 @@ class ShowClientView(generics.RetrieveAPIView):
     queryset = Client.objects.all()
 
 
-class MatchClientView(viewsets.ModelViewSet):
-    """Matching clients, if matching both of them send email"""
-    queryset = Client.objects.all()
-
-    def get(self, request, client_id):
+class MatchClientView(viewsets.ViewSet):
+    """Подходящие клиенты, если они оба совпадают, отправляется электронное письмо"""
+    def match(self, request, client_id):
         # Getting Data
         from_client_id = self.request.user.pk
         to_client_id = client_id
@@ -75,7 +76,6 @@ class MatchClientView(viewsets.ModelViewSet):
             data['match_created_status'] = True
             # Searching Match
             old_matchs = Match.objects.filter(from_client_id=to_client_id, to_client_id=from_client_id)
-
             if old_matchs:
                 from_client = Client.objects.get(pk=from_client_id)
                 to_client = Client.objects.get(pk=to_client_id)
@@ -92,8 +92,56 @@ class MatchClientView(viewsets.ModelViewSet):
 
 
 class ListClientsView(generics.ListAPIView):
-    """List of Clients with filters"""
+    """Список клиентов с фильтрами"""
     serializer_class = ShowClientSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ClientFilter
     queryset = Client.objects.all()
+
+
+class CoordinateClientView(viewsets.ViewSet):
+    """
+    View для координат
+    get запрос для получение
+    post запрос для корректировки
+    """
+    serializer_class = CoordinateClientSerializer
+
+    def get(self, request):
+        user = self.request.user
+        data = {
+            'longitude': user.longitude,
+            'latitude': user.latitude,
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        # Getting Data
+        user = self.request.user
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid()
+        data = serializer.data
+        # Update Model
+        user.longitude = data['longitude']
+        user.latitude = data['latitude']
+        user.save()
+        return self.get(request)
+
+
+class DistanceClientView(viewsets.ViewSet):
+    """View для получение расстояние"""
+    def get(self, request, pk):
+        user = self.request.user
+        client = get_object_or_404(Client, pk=pk)
+        data = {
+            'user_id': user.id,
+            'client_id': client.id,
+            'user_longitude': user.longitude,
+            'user_latitude': user.latitude,
+            'client_longitude': client.longitude,
+            'client_latitude': client.latitude,
+            'distance': user.get_distance(
+                (client.latitude, client.longitude)
+            ),
+        }
+        return Response(data, status=status.HTTP_200_OK)

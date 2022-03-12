@@ -3,7 +3,7 @@
 
 Результат: [kht-test-apptrix.herokuapp.com](https://kht-test-apptrix.herokuapp.com/api/)
 
-Инструменты для разработки:
+Используется:
 ![Python](https://img.shields.io/badge/-Python-black?style=flat-square&logo=Python)
 ![Postgresql](https://img.shields.io/badge/-Postgresql-%232c3e50?style=flat-square&logo=Postgresql)
 ![Docker](https://img.shields.io/badge/-Docker-46a2f1?style=flat-square&logo=docker&logoColor=white)

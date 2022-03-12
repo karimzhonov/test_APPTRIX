@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.contrib.auth import authenticate, login
 
 from rest_framework import viewsets, generics, status
 from rest_framework.response import Response
@@ -32,18 +34,22 @@ class CreateClientView(generics.CreateAPIView):
 
 
 class AuthClientView(viewsets.ModelViewSet):
-    serializer_class = AuthClientSerializers
+    serializer_class = AuthClientSerializer
     queryset = Client.objects.all()
 
     def post(self, request, *args, **kwargs):
         username = request.data['username']
         password = request.data['password']
 
-        ret, client = Client.auth(username, password)
-        return Response({
-            "auth": ret,
-        })
+        client = authenticate(username=username, password=password)
+        if client is not None:
+            return redirect('show_client', pk=client.pk)
+        else:
+            return Response({})
 
+class ShowClientView(generics.RetrieveAPIView):
+    serializer_class = ShowClientSerializer
+    queryset = Client.objects.all()
 
 def test(request):
     return HttpResponse('Test')

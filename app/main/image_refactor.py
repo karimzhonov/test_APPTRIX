@@ -19,4 +19,5 @@ def impose_ico_to_image(avatar):
     top = image_height // 20
     left = image_wight // 20
     image[top:top + new_ico_height, left:left + new_ico_width] = new_ico
+
     return image

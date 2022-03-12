@@ -1,4 +1,3 @@
-import cv2
 import numpy as np
 from django.core.mail import send_mail
 from django.db import models
@@ -37,6 +36,8 @@ class Client(AbstractUser):
         :param image: np.array
         :return: image_name
         """
+        import cv2.cv2 as cv2
+
         image_name = self.avatar.name
         _format = image_name.split('.')[-1]
         _, image_bytes = cv2.imencode(f'.{_format}', image)

@@ -1,1 +1,1 @@
-web: cd ./app && gunicorn conf.wsgi
+web: cd ./app && gunicorn conf.wsgi --preload --timeout 10 --max-requests 1200

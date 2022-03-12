@@ -5,7 +5,8 @@ import numpy as np
 from django.conf import settings
 
 
-def impose_ico_to_image(image: np.array):
+def impose_ico_to_image(avatar):
+    image = cv2.imdecode(np.frombuffer(avatar.read(), np.uint8), -1)
     image_height, image_wight, _ = image.shape
     path_to_ico = os.path.join(settings.STATIC_ROOT, 'favicon.jpeg')
     ico = cv2.imread(path_to_ico)

@@ -25,4 +25,4 @@ services:
       - "5432:5432"
     volumes:
       - ./app/:/app
-    command: sh -c "gunicorn conf.wsgi"
+    command: sh -c "gunicorn conf.wsgi --preload --timeout 10 --max-requests 1200"

@@ -19,8 +19,7 @@ class CreateClientView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         # Refactor avatar
         avatar = request.data['avatar']
-        image = cv2.imdecode(np.frombuffer(avatar.read(), np.uint8), -1)
-        image = impose_ico_to_image(image)
+        image = impose_ico_to_image(avatar)
         # Serialzing data
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)

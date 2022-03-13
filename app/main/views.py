@@ -71,33 +71,34 @@ class MatchClientView(viewsets.ViewSet):
     """Подходящие клиенты, если они оба совпадают, отправляется электронное письмо"""
     def match(self, request, pk):
         # Getting Data
-        from_client_id = self.request.user.pk
-        to_client_id = pk
-        # Create Match
-        data = {
-            'match_created_status': False,
-            'email_sent_status': False,
-        }
-        try:
-            Match.objects.create(from_client_id=from_client_id, to_client_id=to_client_id)
-            data['match_created_status'] = True
-            # Searching Match
-            old_matchs = Match.objects.filter(from_client_id=to_client_id, to_client_id=from_client_id)
-            if old_matchs:
-                from_client = Client.objects.get(pk=from_client_id)
-                to_client = Client.objects.get(pk=to_client_id)
-                data['from_client_id'] = from_client.pk
-                data['from_client_response'] = from_client.send_email_about_matching(to_client)
-                data['from_client_email'] = from_client.email
-                data['to_client_id'] = to_client.pk
-                data['to_client_response'] = to_client.send_email_about_matching(from_client)
-                data['to_client_eamil'] = to_client.email
-                data['email_sent_status'] = True
-            return Response(data, status=status.HTTP_202_ACCEPTED)
-        except IntegrityError:
-            return Response(data, status=status.HTTP_400_BAD_REQUEST)
-        except AttributeError:
+        if not self.request.user.is_authenticated:
             return redirect('auth_client')
+        else:
+            from_client_id = self.request.user.pk
+            to_client_id = pk
+            # Create Match
+            data = {
+                'match_created_status': False,
+                'email_sent_status': False,
+            }
+            try:
+                Match.objects.create(from_client_id=from_client_id, to_client_id=to_client_id)
+                data['match_created_status'] = True
+                # Searching Match
+                old_matchs = Match.objects.filter(from_client_id=to_client_id, to_client_id=from_client_id)
+                if old_matchs:
+                    from_client = Client.objects.get(pk=from_client_id)
+                    to_client = Client.objects.get(pk=to_client_id)
+                    data['from_client_id'] = from_client.pk
+                    data['from_client_response'] = from_client.send_email_about_matching(to_client)
+                    data['from_client_email'] = from_client.email
+                    data['to_client_id'] = to_client.pk
+                    data['to_client_response'] = to_client.send_email_about_matching(from_client)
+                    data['to_client_eamil'] = to_client.email
+                    data['email_sent_status'] = True
+                return Response(data, status=status.HTTP_202_ACCEPTED)
+            except IntegrityError:
+                return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ListClientsView(generics.ListAPIView):
@@ -111,25 +112,27 @@ class ListClientsView(generics.ListAPIView):
 class CoordinateClientView(viewsets.ViewSet):
     """
     Координат Клиента
-    get запрос для получение
+    get запрос для получения
     post запрос для корректировки
     """
     serializer_class = CoordinateClientSerializer
 
     def get(self, request):
-        try:
+        if not self.request.user.is_authenticated:
+            return redirect('auth_client')
+        else:
             user = self.request.user
             data = {
                 'longitude': user.longitude,
                 'latitude': user.latitude,
             }
             return Response(data, status=status.HTTP_200_OK)
-        except AttributeError:
-            return redirect('auth_client')
 
     def post(self, request):
         # Getting Data
-        try:
+        if not self.request.user.is_authenticated:
+            return redirect('auth_client')
+        else:
             user = self.request.user
             serializer = self.serializer_class(data=request.data)
             serializer.is_valid()
@@ -139,14 +142,14 @@ class CoordinateClientView(viewsets.ViewSet):
             user.latitude = data['latitude']
             user.save()
             return self.get(request)
-        except AttributeError:
-            return redirect('auth_client')
 
 
 class DistanceClientView(viewsets.ViewSet):
     """View для получение расстояние"""
     def get(self, request, pk):
-        try:
+        if not self.request.user.is_authenticated:
+            return redirect('auth_client')
+        else:
             user = self.request.user
             client = get_object_or_404(Client, pk=pk)
             data = {
@@ -161,5 +164,3 @@ class DistanceClientView(viewsets.ViewSet):
                 ),
             }
             return Response(data, status=status.HTTP_200_OK)
-        except AttributeError:
-            return redirect('auth_client')

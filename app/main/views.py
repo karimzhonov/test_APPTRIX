@@ -12,7 +12,7 @@ from .filters import ClientFilter
 
 
 class CreateClientView(generics.CreateAPIView):
-    """Создается клиент, рефакторинг изображения и сохраните изображение"""
+    """Создается клиент, рефакторинг изображения и сохраняет изображение"""
     serializer_class = CreateClientSerializer
     queryset = Client.objects.all()
 
@@ -46,13 +46,19 @@ class AuthClientView(viewsets.ModelViewSet):
     def login(self, request, *args, **kwargs):
         username = request.data['username']
         password = request.data['password']
-
+        data = {
+            'auth_status': False,
+            'client': None,
+        }
         client = authenticate(username=username, password=password)
         if client is not None:
             login(self.request, client)
-            return redirect('show_client', pk=client.pk)
+            data['auth_status'] = True
+            serializer = ShowClientSerializer(client)
+            data['client'] = serializer.data
+            return Response(data, status.HTTP_202_ACCEPTED)
         else:
-            return Response({})
+            return Response(data, status.HTTP_306_RESERVED)
 
 
 class ShowClientView(generics.RetrieveAPIView):
@@ -87,7 +93,7 @@ class MatchClientView(viewsets.ViewSet):
                 data['to_client_response'] = to_client.send_email_about_matching(from_client)
                 data['to_client_eamil'] = to_client.email
                 data['email_sent_status'] = True
-            return Response(data, status=status.HTTP_200_OK)
+            return Response(data, status=status.HTTP_202_ACCEPTED)
         except IntegrityError:
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
         except AttributeError:

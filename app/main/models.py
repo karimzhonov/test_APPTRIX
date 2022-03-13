@@ -33,7 +33,7 @@ class Client(AbstractUser):
     def save_avatar(self, image) -> str:
         """
         Сохранение изображения
-        :param image: np.array
+        :param image: bytes
         :return: image_name
         """
 
@@ -51,20 +51,18 @@ class Client(AbstractUser):
         text = f'Вы понравились {matched_client}! Почта участника: {matched_client.email}'
         return send_mail(subject, text, settings.DEFAULT_FROM_EMAIL, [f'{self.email}'], )
 
-    def get_position(self):
-        pass
-
-    def get_distance(self, latitude_longitude: tuple[int, int]) -> float:
+    def get_distance(self, latitude_longitude: tuple[int, int], l: int = 111100) -> float:
         """
         Рассчитать расстояние
         :param latitude_longitude: tuple[широта, долгота]
+        :param l: длина дуги 1° меридиана (на Земле l=111,1 км)
         :return: расстояние
         """
         latitude, longitude = latitude_longitude
-        l = 111100
-        return np.arccos(np.sin(self.latitude)*np.sin(latitude) + np.cos(self.latitude)*np.cos(latitude)*np.cos(longitude - self.longitude))*l
+        return np.arccos(np.sin(self.latitude) * np.sin(latitude) + np.cos(self.latitude) * np.cos(latitude) * np.cos(
+            longitude - self.longitude)) * l
 
-    def get_distance_str(self, l = 111100) -> str:
+    def get_distance_str(self, l: int = 111100) -> str:
         """
         Формула Great-circle_distance для запроса sql
         :param l: длина дуги 1° меридиана (на Земле l=111,1 км)
@@ -79,7 +77,7 @@ class Match(models.Model):
     to_client = models.ForeignKey(Client, models.CASCADE, related_name='match_to_client')
     date_time = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'From: {self.from_client} To: {self.to_client}'
 
     class Meta:

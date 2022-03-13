@@ -62,7 +62,7 @@ class AuthClientView(viewsets.ModelViewSet):
 
 
 class ShowClientView(generics.RetrieveAPIView):
-    """Покажит одного из клиентов"""
+    """Покажит одного из клиентов(Пол: female=1, male=2)"""
     serializer_class = ShowClientSerializer
     queryset = Client.objects.all()
 
@@ -102,7 +102,7 @@ class MatchClientView(viewsets.ViewSet):
 
 
 class ListClientsView(generics.ListAPIView):
-    """Список клиентов с фильтрами"""
+    """Список клиентов с фильтрами (Пол: female=1, male=2)"""
     serializer_class = ShowClientSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = ClientFilter

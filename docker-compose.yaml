@@ -8,6 +8,18 @@ services:
     environment:
       - DEBUG=1
       - host_name=kht-test-apptrix.herokuapp.com
+      # Db Config
+      - db_engine=django.db.backends.postgresql_psycopg2
+      - db_name=
+      - db_user=
+      - db_password=
+      - db_host=
+      - db_port=5432
+      # Email Config
+      - email_name=
+      - email_password=
+      - email_host=smtp.gmail.com
+      - email_host_port=587
     ports:
       - "8000:8000"
       - "5432:5432"

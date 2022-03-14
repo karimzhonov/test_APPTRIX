@@ -26,8 +26,6 @@ class CreateClientView(generics.CreateAPIView):
         data = dict(serializer.data)
         # Refactor fields
         data['avatar'] = request.data['avatar'].name.__str__()
-        data['gender_id'] = data['gender']
-        data.pop('gender')
         # create Client
         client = Client.objects.create_user(**data)
         client.save_avatar(image)

@@ -7,22 +7,10 @@ from django.contrib.auth.models import AbstractUser
 from django.core.files.base import ContentFile
 
 
-class Gender(models.Model):
-    """Пол"""
-    name = models.CharField(max_length=255, unique=True)
-
-    def __str__(self) -> str:
-        return f'{self.name}'
-
-    class Meta:
-        verbose_name = 'Пол'
-        verbose_name_plural = 'Пол'
-
-
 class Client(AbstractUser):
     """Участник"""
     avatar = models.ImageField(upload_to='avatars/', blank=True)
-    gender = models.ForeignKey(Gender, models.CASCADE, blank=True, default=1)
+    gender = models.CharField(max_length=255, blank=True)
     longitude = models.FloatField(blank=True, default=0)
     latitude = models.FloatField(blank=True, default=0)
 
@@ -49,7 +37,7 @@ class Client(AbstractUser):
         """
         subject = f'Test Apptrix'
         text = f'Вы понравились {matched_client}! Почта участника: {matched_client.email}'
-        return send_mail(subject, text, settings.DEFAULT_FROM_EMAIL, [f'{self.email}'], )
+        return send_mail(subject, text, settings.DEFAULT_FROM_EMAIL, [f'{self.email}'], True)
 
     def get_distance(self, latitude_longitude: tuple[int, int], l: int = 111100) -> float:
         """

@@ -5,12 +5,12 @@ from .models import Client
 class ClientFilter(filters.FilterSet):
     first_name = filters.CharFilter(field_name='first_name', lookup_expr='icontains')
     last_name = filters.CharFilter(field_name='last_name', lookup_expr='icontains')
-    gender = filters.CharFilter(field_name='gender__name', lookup_expr='iexact', label='Пол (female, male)')
+    gender = filters.CharFilter(field_name='gender', lookup_expr='iexact', label='Пол (female, male)')
     distanse = filters.NumberFilter(field_name='distance', method='distance_filter', label='Расстояние')
 
     class Meta:
         model = Client
-        fields = ['first_name', 'last_name']
+        fields = ['first_name', 'last_name', 'gender']
 
     def distance_filter(self, queryset, name, value):
         """Фильтр расстояние"""

@@ -76,22 +76,14 @@ WSGI_APPLICATION = 'conf.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': os.environ.get('db_engine'),
-    #     'NAME': os.environ.get('db_name'),
-    #     'USER': os.environ.get('db_user'),
-    #     'PASSWORD': os.environ.get('db_password'),
-    #     'HOST': os.environ.get('db_host'),
-    #     'PORT': os.environ.get('db_port'),
-    # },
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dnpd1b4iumfsq',
-        'USER': 'jskxlnsnraqerv',
-        'PASSWORD': '4fff0f47f4cd46f5315eb5bd2a093c6deba1a985b1cfaacb2bb9fdece7dc5abd',
-        'HOST': 'ec2-34-253-116-145.eu-west-1.compute.amazonaws.com',
-        'PORT': '5432',
-    }
+        'ENGINE': os.environ.get('db_engine'),
+        'NAME': os.environ.get('db_name'),
+        'USER': os.environ.get('db_user'),
+        'PASSWORD': os.environ.get('db_password'),
+        'HOST': os.environ.get('db_host'),
+        'PORT': os.environ.get('db_port'),
+    },
 }
 
 # Password validation
@@ -151,11 +143,7 @@ REST_FRAMEWORK = {
 }
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-# EMAIL_HOST = os.environ.get('email_host')
-# EMAIL_PORT = int(os.environ.get('email_host_port'))
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER = os.environ.get('email_name')
-# EMAIL_HOST_PASSWORD = os.environ.get('email_password')
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER = 'testapptrix4944@gmail.com'
-EMAIL_HOST_PASSWORD = 'karimjonov4944'
+EMAIL_HOST = os.environ.get('email_host')
+EMAIL_PORT = int(os.environ.get('email_host_port'))
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER = os.environ.get('email_name')
+EMAIL_HOST_PASSWORD = os.environ.get('email_password')
